@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LikeView">
-        <attr name="like_count" format="string" />
-        <attr name="like_text_size" format="dimension" />
-        <attr name="like_drawable_padding" format="dimension" />
-        <attr name="like_text_color" format="color" />
+    <declare-styleable name="NumberView">
+        <attr name="number_count" format="integer" />
+        <attr name="number_text_size" format="dimension" />
+        <attr name="number_text_color" format="color" />
     </declare-styleable>
+
 </resources>

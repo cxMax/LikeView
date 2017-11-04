@@ -27,19 +27,11 @@ public class LikeView extends View {
 
     private static final String TAG = "com.cxmax.widget.LikeView";
 
-    @DrawableRes
-    private static final int RES_LIKE_SELECTED;
-    private static final int RES_LIKE_UNSELECTED;
-    private static final int RES_LIKE_SELECTED_SHINING;
-    private static final String DEFAULT_LIKE_COUNT;
+    @DrawableRes private static final int RES_LIKE_SELECTED;
+    @DrawableRes private static final int RES_LIKE_UNSELECTED;
+    @DrawableRes private static final int RES_LIKE_SELECTED_SHINING;
 
     private Context context;
-    /* attr params */
-    private int likeTextSize;
-    private int likeDrawablePadding;
-    private String likeCount;
-    @ColorInt
-    private int likeTextColor;
 
     /* basic params */
     private Bitmap likeSelectedBitmap;
@@ -52,7 +44,6 @@ public class LikeView extends View {
         RES_LIKE_SELECTED = R.mipmap.ic_messages_like_selected;
         RES_LIKE_UNSELECTED = R.mipmap.ic_messages_like_unselected;
         RES_LIKE_SELECTED_SHINING = R.mipmap.ic_messages_like_selected_shining;
-        DEFAULT_LIKE_COUNT = "12";
     }
 
     public LikeView(Context context) {
@@ -66,7 +57,6 @@ public class LikeView extends View {
     public LikeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        initializeCustomAttrs(context, attrs);
         initializeCommonParams(context);
     }
 
@@ -77,51 +67,30 @@ public class LikeView extends View {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
-    private void initializeCustomAttrs(Context context, @Nullable AttributeSet attrs) {
-        if (attrs != null) {
-            TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.LikeView, 0, 0);
-            if (attr != null) {
-                likeDrawablePadding = attr.getDimensionPixelSize(R.styleable.LikeView_like_drawable_padding, context.getResources().getDimensionPixelSize(R.dimen.common_text_size_12));
-                likeTextSize = attr.getDimensionPixelSize(R.styleable.LikeView_like_text_size, context.getResources().getDimensionPixelSize(R.dimen.common_text_size_12));
-                likeTextColor = attr.getColor(R.styleable.LikeView_like_text_size, ContextCompat.getColor(context, R.color.black));
-                likeCount = attr.getString(R.styleable.LikeView_like_count);
-                attr.recycle();
-            }
-        }
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int specMode = MeasureSpec.getMode(widthMeasureSpec);
-        int specSize = MeasureSpec.getSize(widthMeasureSpec);
-        if (specMode == MeasureSpec.EXACTLY) {
-            width = specSize;
-        } else if (specMode == MeasureSpec.AT_MOST) {
-            width = DevicesUtil.getDisplayMetrics(context).widthPixels;
+    }
+
+    public static int measureSize(int measureSpec, int defaultSize) {
+        int result = defaultSize;
+        int specMode = View.MeasureSpec.getMode(measureSpec);
+        int specSize = View.MeasureSpec.getSize(measureSpec);
+        switch (specMode) {
+            case View.MeasureSpec.UNSPECIFIED:
+            case View.MeasureSpec.AT_MOST:
+                break;
+            case View.MeasureSpec.EXACTLY:
+                result = specSize;
+                result = Math.max(result, defaultSize);
+                break;
         }
-
-        specMode = MeasureSpec.getMode(heightMeasureSpec);
-        specSize = MeasureSpec.getSize(heightMeasureSpec);
-        if (specMode == MeasureSpec.EXACTLY) {
-            height = specSize;
-        } else if (specMode == MeasureSpec.AT_MOST) {
-            height = DevicesUtil.getDisplayMetrics(context).heightPixels;
-        }
-
-        setMeasuredDimension(width, height);
-
+        return result;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawableInitialState(canvas);
     }
 
-    private void drawableInitialState(Canvas canvas) {
-        canvas.save();
-        canvas.drawBitmap(likeUnselectedBitmap, 0 , height / 2, paint);
-        canvas.restore();
-    }
 }
