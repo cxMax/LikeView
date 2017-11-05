@@ -6,26 +6,48 @@
     android:layout_height="match_parent"
     tools:context="com.cxmax.likeview.MainActivity">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LikeView"
+    <!--<TextView-->
+        <!--android:id="@+id/title"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="LikeView"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--<com.cxmax.widget.NumberView-->
+        <!--android:id="@+id/number"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--app:number_text_size="@dimen/common_text_size_16"-->
+        <!--app:number_text_color="@color/colorPrimary"-->
+        <!--app:number_count="12"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/title" />-->
+
+    <!--<com.cxmax.widget.LikeView-->
+        <!--android:id="@+id/like"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginStart="20dp"-->
+        <!--app:layout_constraintStart_toEndOf="@id/number"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/number"/>-->
+
+    <com.cxmax.widget.LikeNumberView
+        android:id="@+id/like_number"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:like_number_text_size="@dimen/common_text_size_16"
+        app:like_number_text_color="@color/black"
+        app:like_number_count="12"
+        app:like_number_state="false"
+        app:like_number_drawable_padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.cxmax.widget.NumberView
-        android:id="@+id/number"
-        android:layout_width="30dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        app:number_text_size="@dimen/common_text_size_16"
-        app:number_text_color="@color/colorPrimary"
-        app:number_count="12"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

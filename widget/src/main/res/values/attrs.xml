@@ -6,4 +6,15 @@
         <attr name="number_text_color" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="LikeView">
+        <attr name="like_state" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="LikeNumberView">
+        <attr name="like_number_count" format="integer" />
+        <attr name="like_number_text_size" format="dimension" />
+        <attr name="like_number_text_color" format="color" />
+        <attr name="like_number_drawable_padding" format="dimension" />
+        <attr name="like_number_state" format="boolean" />
+    </declare-styleable>
 </resources>

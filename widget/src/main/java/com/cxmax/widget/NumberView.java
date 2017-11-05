@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cxmax.widget.utils.AnimUtil;
+import com.cxmax.widget.utils.ComputeUtil;
 import com.cxmax.widget.utils.DevicesUtil;
 
 /**
@@ -23,7 +25,7 @@ import com.cxmax.widget.utils.DevicesUtil;
 
 public class NumberView extends View implements INumberView {
 
-    private static final String TAG = "com.cxmax.widget.NumberView";
+    private static final String TAG = "widget.NumberView";
     private static final int DEFAULT_ANIMATOR_DURATION = 150;
 
     private Context context;
@@ -78,19 +80,24 @@ public class NumberView extends View implements INumberView {
 
     @Override
     public void increase() {
-        setCount(count + 1);
+        changeCount(count + 1);
     }
 
     @Override
     public void decrease() {
-        setCount(count - 1);
+        changeCount(count - 1);
+    }
+
+    @Override
+    public void release() {
+        AnimUtil.remove(changeAnimator);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(measureSize(widthMeasureSpec, getContentWidth() + getPaddingStart() + getPaddingEnd()),
-                measureSize(heightMeasureSpec, getContentHeight() + getPaddingStart() + getPaddingEnd()));
+        setMeasuredDimension(measureSize(widthMeasureSpec, measureContentWidth() + getPaddingStart() + getPaddingEnd()),
+                measureSize(heightMeasureSpec, measureContentHeight() + getPaddingStart() + getPaddingEnd()));
     }
 
     @Override
@@ -117,6 +124,12 @@ public class NumberView extends View implements INumberView {
         // third draw the changeable back block of current number
         paint.setColor(currentColor);
         canvas.drawText(nums[2], startX + charWidth * nums[0].length(), baseY + currentChangeY, paint);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        release();
     }
 
     private void initializeCustomAttrs(Context context, @Nullable AttributeSet attrs) {
@@ -158,14 +171,13 @@ public class NumberView extends View implements INumberView {
         return result;
     }
 
-    private int getContentWidth() {
+    private int measureContentWidth() {
         return (int) paint.measureText(String.valueOf(count));
     }
-    private int getContentHeight() {
+
+    private int measureContentHeight() {
         return DevicesUtil.sp2px(context, textSize);
     }
-
-
 
     /**
      * 把整个字符串 拆分成 共有不变的前部 / (原来数字)变化的后部分 / (当前数字)变化的后部分, 然后分别放进数组中 , 做转换动画
@@ -211,30 +223,11 @@ public class NumberView extends View implements INumberView {
     }
 
     private void formatColor() {
-        originColor = (int) evaluate(textYFlag, textColor, 0x00000000);
-        currentColor = (int) evaluate(textYFlag, 0x00000000, textColor);
+        originColor = (int) ComputeUtil.evaluate(textYFlag, textColor, 0x00000000);
+        currentColor = (int) ComputeUtil.evaluate(textYFlag, 0x00000000, textColor);
     }
 
-    private Object evaluate(float fraction, Object startValue, Object endValue) {
-        int startInt = (Integer) startValue;
-        int startA = (startInt >> 24) & 0xff;
-        int startR = (startInt >> 16) & 0xff;
-        int startG = (startInt >> 8) & 0xff;
-        int startB = startInt & 0xff;
-
-        int endInt = (Integer) endValue;
-        int endA = (endInt >> 24) & 0xff;
-        int endR = (endInt >> 16) & 0xff;
-        int endG = (endInt >> 8) & 0xff;
-        int endB = endInt & 0xff;
-
-        return (startA + (int) (fraction * (endA - startA))) << 24 |
-                (startR + (int) (fraction * (endR - startR))) << 16 |
-                (startG + (int) (fraction * (endG - startG))) << 8 |
-                (startB + (int) (fraction * (endB - startB)));
-    }
-
-    private void setCount(int number) {
+    private void changeCount(int number) {
         if (number >= 0) {
             computeNum(number - count);
             changeAnimator.start();
@@ -259,5 +252,22 @@ public class NumberView extends View implements INumberView {
         }
         formatColor();
         invalidate();
+    }
+
+    public void setTextColor(int textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setTextSize(int textSize) {
+        this.textSize = textSize;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+        computeNum(0);
+        if (changeAnimator != null && count > 0) {
+            changeAnimator.start();
+        }
+        requestLayout();
     }
 }

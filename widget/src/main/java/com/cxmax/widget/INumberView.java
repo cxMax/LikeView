@@ -19,4 +19,9 @@ public interface INumberView {
      * 数字减少
      */
     void decrease();
+
+    /**
+     * 释放资源
+     */
+    void release();
 }
